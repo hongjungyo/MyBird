@@ -19,13 +19,15 @@ namespace MyBird
         [SerializeField] private float maxSpwanTime = 1.05f;
         [SerializeField] private float minSpwanTime = 0.95f;
 
+  
+
         #endregion
 
         //1초마다 기둥 하나씩 생성, 게임 시작시 (IsStart == true)
 
         private void Update()
         {
-            if (GameManager.IsStart == false)
+            if (GameManager.IsStart == false || GameManager.IsDeath == true)
                 return;
             countdown += Time.deltaTime;
             if(countdown >= pipeTimer)

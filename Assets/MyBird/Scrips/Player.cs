@@ -8,6 +8,9 @@ namespace MyBird
         #region Variables
         private Rigidbody2D rb2D;
 
+        //애니메이션
+        public Animator animator;
+
         //점프
         private bool KeyJump = false;    //점프 키 인풋 체크
         [SerializeField]
@@ -26,8 +29,12 @@ namespace MyBird
 
         //대기
         [SerializeField]
+
         private float readyForce = 1f;
 
+        //UI
+        public GameObject readyUI;
+        public GameObject resultUI;
         #endregion
 
         #region
@@ -59,6 +66,8 @@ namespace MyBird
         }
         private void FixedUpdate()
         {
+            if (GameManager.IsDeath == true)
+                return;
             //점프하기
             if (KeyJump)
             {
@@ -74,22 +83,27 @@ namespace MyBird
             //Collision: 부딛힌 콜라이더의 정보를 가지고 있다.
             if(collision.gameObject.tag == "Ground")
             {
-                Debug.Log("그라운드 충돌");
+                
+                DieBird();
             }
             else if (collision.gameObject.tag == "Pipe")
             {
-                Debug.Log("기둥 충돌");
+                
+                DieBird();
             }
-             
+
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.tag == "Point")
             {
+                GameManager.Score++;
                 Debug.Log("점수 획득");
             }
         }
+
         #endregion
+
 
         //인풋 처리
         void InputBird()
@@ -100,7 +114,7 @@ namespace MyBird
             //게임 start 전이고 점프키가 눌리면
             if(GameManager.IsStart == false && KeyJump == true)
             {
-                GameManager.IsStart = true;
+                StartMove();
             }
         }
 
@@ -145,10 +159,31 @@ namespace MyBird
 
         void MoveBird()
         {
-            if (GameManager.IsStart == false)
+            if (GameManager.IsStart == false || GameManager.IsDeath == true)
                 return;
             transform.Translate(Vector2.right * Time.deltaTime * moveSpeed, Space.World);
 
+        }
+
+        //버드 죽음
+        void DieBird()
+        {
+            //두번죽음 체크
+            if (GameManager.IsDeath)
+                return;
+            GameManager.IsDeath = true;
+            animator.enabled = false;
+            rb2D.linearVelocity = Vector2.zero;
+
+            //UI
+            resultUI.SetActive(true);
+        }
+
+        //버드 이동 시작
+        void StartMove()
+        {
+            GameManager.IsStart = true;
+            readyUI.SetActive(false);
         }
     }
 }

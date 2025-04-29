@@ -7,6 +7,8 @@ TagManager:
   - Pipe
   - Point
   - Ground
+  - PipeKiller
+  - Retry
   layers:
   - Default
   - TransparentFX

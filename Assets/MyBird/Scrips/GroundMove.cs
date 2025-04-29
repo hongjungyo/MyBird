@@ -25,8 +25,10 @@ namespace MyBird
         {
             if (GameManager.IsStart == false)
                 return;
+
+            float speed = (GameManager.IsDeath) ? moveSpeed / 4f : moveSpeed;
             //왼쪽으로 moveSpeed 만큼 이동
-            transform.Translate(Vector3.left * Time.deltaTime * moveSpeed, Space.World);
+            transform.Translate(Vector3.left * Time.deltaTime * speed, Space.World);
 
             if (transform.localPosition.x <= -8.4f)
             {
